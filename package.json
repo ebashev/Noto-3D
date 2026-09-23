@@ -1,6 +1,6 @@
 {
   "name": "emoji-datasource-noto3d",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Noto 3D emoji images and Unicode metadata for apps and npm CDNs (unofficial)",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -34,7 +34,7 @@
     "licenses",
     "NOTICE.md",
     "README.md",
-    "docs"
+    "CONTRIBUTING.md"
   ],
   "sideEffects": false,
   "license": "SEE LICENSE IN LICENSE.md",
@@ -66,7 +66,6 @@
     "build": "node scripts/build.mjs",
     "images": "node scripts/images.mjs",
     "fetch:originals": "node scripts/fetch-originals.mjs",
-    "import:originals": "node scripts/import-originals.mjs",
     "test": "node --test test/runtime.test.mjs test/csv.test.mjs",
     "typecheck": "tsc --noEmit --strict --lib ES2022,DOM --module NodeNext --moduleResolution NodeNext test/types.mts",
     "verify": "node scripts/verify.mjs",

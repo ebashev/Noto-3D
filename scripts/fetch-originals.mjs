@@ -11,7 +11,7 @@ await pool(rows, 12, async row => {
     try {
       const res=await fetch(row.url,{signal:AbortSignal.timeout(45000)}); if(!res.ok)throw new Error(`HTTP ${res.status}`);
       const b=Buffer.from(await res.arrayBuffer());
-      if(b.length!==row.bytes||sha256(b)!==row.sha256)throw new Error('CDN changed or corrupt image. Import the original archive instead.');
+      if(b.length!==row.bytes||sha256(b)!==row.sha256)throw new Error('Source differs from the locked catalog; review the upstream change before rebuilding.');
       await writeFile(file+'.part',b);await rename(file+'.part',file);error=null;break;
     }catch(e){error=e.message;if(attempt<3)await new Promise(r=>setTimeout(r,1000*(attempt+1)));}
   }

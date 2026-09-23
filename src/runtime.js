@@ -26,7 +26,7 @@ function getEmojiPath(input, options={}) {
   const e=findEmoji(input);if(!e)return null;
   const format=options.format??'webp',size=options.size??(format==='png'?64:128);
   if(!((format==='png'&&size===64)||(format==='webp'&&(size===128||size===256))))throw new RangeError('Supported: PNG 64, WebP 128 or 256');
-  return `img/noto3d/${format}/${size}/${e.image.replace(/\.png$/,'.'+format)}`;
+  return `img/${format}${size}/${e.image.replace(/\.png$/,'.'+format)}`;
 }
 function getEmojiUrl(input, options={}) {
   const file=getEmojiPath(input,options);if(!file)return null;

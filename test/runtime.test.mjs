@@ -18,10 +18,10 @@ test('grapheme tokenizer preserves copyable text and composed emoji',()=>{
  assert.ok(parts.at(-1).text.endsWith('123 ❤︎'));
 });
 test('paths and exact version CDN URLs',()=>{
- assert.equal(getEmojiPath('🤠'),'img/noto3d/webp/128/1f920.webp');
- assert.equal(getEmojiPath('🤠',{format:'png'}),'img/noto3d/png/64/1f920.png');
+ assert.equal(getEmojiPath('🤠'),'img/webp128/1f920.webp');
+ assert.equal(getEmojiPath('🤠',{format:'png'}),'img/png64/1f920.png');
  assert.ok(getEmojiUrl('🤠',{cdn:'unpkg'}).startsWith('https://unpkg.com/'));
- assert.equal(getEmojiUrl('🤠',{baseUrl:'/emoji-assets/'}),'/emoji-assets/img/noto3d/webp/128/1f920.webp');
+ assert.equal(getEmojiUrl('🤠',{baseUrl:'/emoji-assets/'}),'/emoji-assets/img/webp128/1f920.webp');
  assert.equal(getEmojiPath('unavailable'),null);
  assert.throws(()=>getEmojiPath('🤠',{format:'png',size:256}));assert.throws(()=>getEmojiUrl('🤠',{version:'latest'}));
 });

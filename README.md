@@ -1,87 +1,128 @@
 # Noto 3D
 
-Неофициальный набор **3 988 Noto 3D Emoji** для приложений: изображения, метаданные и небольшой JavaScript API. Автор графики — Google. Упаковка и интеграция — ebaweff.
+3 988 эмодзи Google Noto 3D для приложений: прозрачные PNG и WebP, Unicode-каталог и JavaScript API без runtime-зависимостей.
 
-Репозиторий: https://github.com/ebashev/Noto-3D
+Неофициальный проект сообщества. Автор изображений - Google.
 
-> Это подготовленный к публикации проект. Наличие этих файлов не означает, что пакет уже опубликован на npm. Примеры используют имя `emoji-datasource-noto3d`; если выберете другое имя, замените его в командах и URL. Условия лицензирования графики описаны в [LICENSE.md](LICENSE.md): у upstream есть противоречащие друг другу указания.
+## Изображения
 
-## Что внутри
+| Каталог | Размер | Файлов |
+| --- | --- | ---: |
+| [`img/png64`](img/png64) | PNG 64 × 64 | 3 988 |
+| [`img/webp128`](img/webp128) | WebP 128 × 128 | 3 988 |
+| [`img/webp256`](img/webp256) | WebP 256 × 256 | 3 988 |
 
-| Содержимое | Назначение |
-|---|---|
-| `img/noto3d/png/64/` | 3 988 PNG, прозрачность, интерфейсы и совместимость |
-| `img/noto3d/webp/128/` | 3 988 WebP, основной вариант для интерфейса |
-| `img/noto3d/webp/256/` | 3 988 WebP для крупных реакций и превью |
-| `emoji.json` | Плоский каталог всех 3 988 изображений, включая варианты |
-| `emoji-datasource.json` | Каталог с вложенными `skin_variations`, похожий на emoji-data |
-| `dist/` | Готовые ESM, CommonJS и TypeScript declarations |
-| `data/source-catalog.csv` | Исходный CSV: имена, Unicode, URL, размер и SHA-256 |
-| `manifest.json` | Перечень всех выходных изображений с размером и SHA-256 |
+Имя файла - Unicode-код в нижнем регистре, с дефисами между code points. Например, `1f920.webp` для 🤠 и `1f44d-1f3fd.webp` для 👍🏽. PNG уменьшены из оригиналов 512 px. WebP использует quality 85 и сохраняет прозрачность.
 
-WebP имеет сжатие с потерями, quality=85; альфа сохраняется с alphaQuality=100. PNG 64 уменьшены из исходных 512 px. Исходники 512 px не включены в npm: они занимают примерно 570 МБ. Для них есть проверяемое восстановление из первоначальных архивов или CDN. Генерация 128/256 px из уменьшенных 64 px **не используется**.
+Все изображения доступны через **Code → Download ZIP** или `git clone`. GitHub показывает не более 1 000 файлов в списке большого каталога; остальные доступны по прямому пути и входят в полную загрузку.
 
-**npm не является CDN.** Пакет хранит файлы в реестре; jsDelivr и UNPKG выдают отдельные файлы из опубликованной версии по HTTP. Веб-страница с `<img>` скачивает запрошенные изображения, а не все 3 988. `npm install`, напротив, скачивает весь npm tarball на машину разработчика.
+## Использование без npm
 
-## Установка в приложение после публикации
-
-```sh
-npm install emoji-datasource-noto3d
-```
-
-```js
-import { findEmoji, getEmojiUrl, tokenize } from 'emoji-datasource-noto3d';
-
-findEmoji('🤠');
-getEmojiUrl('🤠'); // jsDelivr, точная версия пакета, WebP 128
-getEmojiUrl('1F920', { format: 'png', size: 64 });
-getEmojiUrl('👍🏽', { size: 256, cdn: 'unpkg' });
-const tokens = tokenize('Привет 🤠!');
-```
-
-CommonJS: `const { getEmojiUrl } = require('emoji-datasource-noto3d');`.
-Полный список: `import emojis from 'emoji-datasource-noto3d/emoji.json' with { type: 'json' };` (Node.js); способ импорта JSON в приложении зависит от сборщика.
-
-Обычный HTML, без установки npm (URL начнёт работать **после публикации**):
+Скопируйте нужные каталоги `img/` в статические файлы приложения:
 
 ```html
-<img
-  src="https://cdn.jsdelivr.net/npm/emoji-datasource-noto3d@1.0.0/img/noto3d/webp/128/1f920.webp"
-  alt="🤠" width="32" height="32" loading="lazy" decoding="async"
->
+<img src="/img/webp128/1f920.webp" alt="🤠" width="32" height="32"
+     loading="lazy" decoding="async">
 ```
 
-У каждого варианта есть собственное имя файла. Например, последовательности разделены дефисами: `1f44d-1f3fd.webp`. Все буквы в именах файлов — строчные; селекторы FE0F сохраняются в канонических путях.
+Для публичного репозитория jsDelivr поддерживает отдельные файлы по commit SHA:
 
-## Быстрый старт разработчика этого проекта
+```text
+https://cdn.jsdelivr.net/gh/ebashev/Noto-3D@COMMIT_SHA/img/webp128/1f920.webp
+```
 
-Нужны Node.js **22.14+** (рекомендуется 24), npm и Git. Изображения и `dist` уже подготовлены.
+Замените `COMMIT_SHA` на SHA выбранного коммита. Такой URL фиксирует версию изображения. Приватные репозитории недоступны через публичный CDN.
+
+## Установка пакета
+
+Из исходников репозитория:
+
+```sh
+git clone https://github.com/ebashev/Noto-3D.git
+cd Noto-3D
+npm ci
+npm run check
+npm pack
+```
+
+В приложении установите получившийся архив:
+
+```sh
+npm install /path/to/emoji-datasource-noto3d-1.1.0.tgz
+```
+
+Имя пакета в этом проекте - `emoji-datasource-noto3d`. Установка командой `npm install emoji-datasource-noto3d` и npm CDN URL доступны после публикации пакета в реестре npm. Если владелец выберет scope, используйте опубликованное имя вида `@username/emoji-datasource-noto3d`.
+
+## JavaScript API
+
+```js
+import { findEmoji, getEmojiPath, getEmojiUrl, searchEmojis, tokenize }
+  from 'emoji-datasource-noto3d';
+
+findEmoji('🤠');
+findEmoji('1F44D-1F3FD');
+findEmoji(':grinning:');
+
+getEmojiPath('🤠'); // img/webp128/1f920.webp
+getEmojiPath('🤠', { format: 'png', size: 64 }); // img/png64/1f920.png
+getEmojiUrl('🤠', { baseUrl: '/assets' }); // /assets/img/webp128/1f920.webp
+searchEmojis('cowboy', { limit: 20 });
+tokenize('Привет 🤠!'); // текстовые и emoji-токены
+```
+
+Поддерживаются ESM, CommonJS и TypeScript. Для CommonJS используйте `require('emoji-datasource-noto3d')`.
+
+| Функция | Назначение |
+| --- | --- |
+| `findEmoji(input)` | Поиск по символу, Unicode-коду или short name; неизвестный код возвращает `undefined` |
+| `getEmojiPath(input, options)` | Относительный путь к PNG/WebP или `null` |
+| `getEmojiUrl(input, options)` | URL jsDelivr, UNPKG или собственного хостинга |
+| `searchEmojis(query, {limit, category})` | Поиск по английским именам, short names, Unicode и категориям |
+| `tokenize(text)` | Разделение на текст и целые emoji-последовательности |
+| `getGoogleUrl(input, size)` | URL исходного PNG Google размером 128 или 512 px |
+| `emojis` | Полный каталог из 3 988 записей |
+
+Варианты изображений: `{format:'png', size:64}`, `{format:'webp', size:128}`, `{format:'webp', size:256}`. По умолчанию - WebP 128. Неверный формат вызывает исключение.
+
+После публикации в npm:
+
+```js
+getEmojiUrl('🤠'); // jsDelivr, имя и точная версия установленного пакета
+getEmojiUrl('🤠', { cdn: 'unpkg', size: 256 });
+```
+
+`getEmojiUrl` использует точную версию из package.json. Для собственного хостинга передайте `baseUrl` и сохраните под ним структуру `img/`. `getGoogleUrl` зависит от внешнего каталога Google `latest`, а не от версии этого пакета.
+
+## Unicode и интеграция
+
+Храните в сообщениях исходный Unicode, а изображения подставляйте при отображении. `tokenize` использует `Intl.Segmenter` и обрабатывает ZWJ-последовательности, флаги, клавиши и оттенки кожи целиком. Для старых сред требуется grapheme polyfill. Явная текстовая форма с FE0E остаётся текстом.
+
+Загружайте изображения по мере появления на экране и используйте кэш. Веб-страница скачивает запрошенные изображения; `npm install` скачивает весь пакет на машину разработчика. При ошибке загрузки показывайте исходный символ из `alt`.
+
+Каталоги данных:
+
+- `emoji.json` - плоский список всех вариантов с полями `emoji`, `unified`, `rgi`, `name`, `category`, `short_names`, `image`.
+- `emoji-datasource.json` - базовые записи с вложенными `skin_variations`, по схеме отдельных изображений emoji-data.
+- `manifest.json` - пути, размеры и SHA-256 всех файлов изображений.
+
+`image` в метаданных обозначает PNG basename; для WebP меняется расширение. Поля `rgi` используют `_`, поля `unified` - `-` и верхний регистр. API также распознаёт допустимые варианты с FE0F и без него.
+
+Это не готовый адаптер для любого emoji-picker: spritesheets и координаты `sheet_x`/`sheet_y` не включены. Если picker передаёт `unified` или Unicode-символ, его можно сопоставить с изображением через `getEmojiUrl` или `getEmojiPath`.
+
+## Разработка
+
+Нужны Node.js 22.14+ и npm; рекомендуется Node.js 24.
 
 ```sh
 npm ci
 npm run check
-npm pack
 npm run preview
 ```
 
-Последняя команда открывает локальный сервер: http://127.0.0.1:8080/ . Откройте адрес в браузере; для остановки — Ctrl+C.
+Пример галереи откроется по адресу http://127.0.0.1:8080/ . `npm run build` пересобирает каталог и ESM/CJS-модули; готовые изображения уже находятся в репозитории. [Сборка изображений и публикация пакета](CONTRIBUTING.md).
 
-`npm run build` пересобирает каталоги и JS из CSV и сохранённых метаданных. Он не требует Python, компилятора C++, Google Drive, сетевого доступа или повторной загрузки графики. `npm ci` загружает инструменты разработки; `sharp` используется только для повторного изготовления изображений. У установленного потребительского пакета нет runtime-зависимостей и install-скриптов.
+## Лицензии и источники
 
-## Документация
+Код этого проекта - MIT. Дополнительные метаданные [iamcal/emoji-data](https://github.com/iamcal/emoji-data) - MIT. Изображения принадлежат Google и не перелицензируются под MIT: в документации upstream есть расхождение относительно применимой лицензии статических 3D PNG. Подробности и исходные тексты - в [LICENSE.md](LICENSE.md) и [NOTICE.md](NOTICE.md).
 
-- [INSTALL_BUILD_PUBLISH.md](docs/INSTALL_BUILD_PUBLISH.md) — установка инструментов, компиляция, GitHub, npm и обновления.
-- [INTEGRATION.md](docs/INTEGRATION.md) — API, свой сервер, React, Unicode, lazy loading и кэш.
-- [DATA.md](docs/DATA.md) — CSV, метаданные, совместимость с emoji-data.
-- [LICENSE.md](LICENSE.md), [NOTICE.md](NOTICE.md) — авторство, лицензии и точные источники.
-
-## Границы совместимости
-
-Это не автоматическая замена `emoji-datasource-apple` для любой библиотеки. Здесь нет Apple-графики и spritesheets. `emoji-datasource.json` сохраняет полезную схему отдельных изображений и вариантов, но намеренно не содержит чужих `sheet_x`, `sheet_y` и vendor-флагов. Библиотека с настройкой `getEmojiUrl`/renderer обычно требует небольшого адаптера; библиотеке, жёстко привязанной к Apple-spritesheet, понадобится доработка.
-
-## Источники
-
-- [Галерея Noto](https://googlefonts.github.io/noto-emoji-files/), снимок изображений 21.09.2026.
-- [Google Noto Emoji](https://github.com/googlefonts/noto-emoji), проверенный commit указан в `data/provenance.json`.
-- [iamcal/emoji-data](https://github.com/iamcal/emoji-data) — дополнительные short names и группировка skin variations; лицензия метаданных MIT приложена.
-- [jsDelivr](https://github.com/jsdelivr/jsdelivr#usage-documentation), [UNPKG](https://unpkg.com/).
+Источник изображений: [Google Noto Emoji](https://googlefonts.github.io/noto-emoji-files/). Набор зафиксирован в каталоге данных; новые emoji добавляются отдельным обновлением.

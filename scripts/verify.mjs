@@ -17,7 +17,7 @@ const ds=await readJson('emoji-datasource.json');const dsCodes=new Set();for(con
 if(dsCodes.size!==3988||source.some(r=>!dsCodes.has(toUnified(r.rgi))))throw new Error('Datasource adapter loses variants');
 // Project budget, deliberately below the current jsDelivr 150 MB package limit.
 let shipped=bytes;
-for(const name of ['dist','licenses','docs'])for(const p of await inventory(path.join(ROOT,name)))shipped+=(await stat(p)).size;
-for(const n of ['emoji.json','emoji-datasource.json','manifest.json','package.json','README.md','NOTICE.md','LICENSE.md'])shipped+=(await stat(path.join(ROOT,n))).size;
+for(const name of ['dist','licenses'])for(const p of await inventory(path.join(ROOT,name)))shipped+=(await stat(p)).size;
+for(const n of ['emoji.json','emoji-datasource.json','manifest.json','package.json','README.md','CONTRIBUTING.md','NOTICE.md','LICENSE.md'])shipped+=(await stat(path.join(ROOT,n))).size;
 if(shipped>120_000_000)throw new Error(`Package exceeds project budget: ${shipped} bytes`);
 console.log(`Verified 3988 emojis / ${seen.size} assets. Images ${(bytes/1e6).toFixed(2)} MB; publish payload ~${(shipped/1e6).toFixed(2)} MB.`);

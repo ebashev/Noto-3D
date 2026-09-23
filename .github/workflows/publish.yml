@@ -1,0 +1,25 @@
+name: Publish to npm
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: npm install -g npm@11.9.0
+      - run: npm ci
+      - name: Check selected tag
+        env:
+          RELEASE_REF: ${{ github.ref }}
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; const p=JSON.parse(fs.readFileSync('package.json')); if(process.env.RELEASE_REF!=='refs/tags/v'+p.version)throw new Error('Select the exact v'+p.version+' tag when running this workflow');"
+      - run: npm run check
+      - run: npm publish --access public --provenance

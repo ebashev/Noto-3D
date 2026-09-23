@@ -39,7 +39,7 @@ export async function catalog() {
   return rows;
 }
 export const toUnified = rgi => rgi.replaceAll('_', '-').toUpperCase();
-export const imagePath = (unified, format, size) => `img/noto3d/${format}/${size}/${unified.toLowerCase()}.${format}`;
+export const imagePath = (unified, format, size) => `img/${format}${size}/${unified.toLowerCase()}.${format}`;
 export async function pool(items, concurrency, fn) {
   let cursor = 0; const results = new Array(items.length);
   await Promise.all(Array.from({ length: concurrency }, async () => { while (cursor < items.length) { const i = cursor++; results[i] = await fn(items[i], i); } }));
