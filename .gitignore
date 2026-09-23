@@ -1,0 +1,9 @@
+node_modules/
+.cache/
+artifacts/
+*.tgz
+*.zip
+.env
+.env.*
+!.env.example
+.DS_Store

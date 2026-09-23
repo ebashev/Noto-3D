@@ -1,0 +1,13 @@
+{
+  "snapshotDate": "2026-09-21",
+  "projectDate": "2026-09-23",
+  "count": 3988,
+  "catalogSource": "https://googlefonts.github.io/noto-emoji-files/",
+  "imagesSource": "https://fonts.gstatic.com/s/e/noto3demoji/latest/{rgi}/512.png",
+  "upstreamRepository": "https://github.com/googlefonts/noto-emoji",
+  "upstreamCommitReviewed": "06121655d0e82f9cae6e7ba6feed4fa6fdbfc2a4",
+  "upstreamMetadata": "https://github.com/iamcal/emoji-data",
+  "metadataSha256": "8736d721991e48c41c57acc46b65e5d32258a45e4bcdebcc6012f420f81e775d",
+  "licenseStatus": "upstream-conflicting-statements",
+  "notes": "Google README describes most image resources as Apache-2.0; root LICENSE is OFL-1.1; gallery FAQ names CC-BY-4.0 for Animated Noto Emoji. No definitive assignment for static CDN PNGs is asserted by this project."
+}

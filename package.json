@@ -1,0 +1,84 @@
+{
+  "name": "emoji-datasource-noto3d",
+  "version": "1.0.0",
+  "description": "Noto 3D emoji images and Unicode metadata for apps and npm CDNs (unofficial)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./emoji.json": "./emoji.json",
+    "./emoji-datasource.json": "./emoji-datasource.json",
+    "./manifest.json": "./manifest.json",
+    "./package.json": "./package.json",
+    "./img/*": "./img/*",
+    "./dist/*": "./dist/*"
+  },
+  "files": [
+    "dist",
+    "img",
+    "emoji.json",
+    "emoji-datasource.json",
+    "manifest.json",
+    "LICENSE.md",
+    "licenses",
+    "NOTICE.md",
+    "README.md",
+    "docs"
+  ],
+  "sideEffects": false,
+  "license": "SEE LICENSE IN LICENSE.md",
+  "author": "ebaweff",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ebashev/Noto-3D.git"
+  },
+  "homepage": "https://github.com/ebashev/Noto-3D#readme",
+  "bugs": {
+    "url": "https://github.com/ebashev/Noto-3D/issues"
+  },
+  "keywords": [
+    "emoji",
+    "noto",
+    "noto3d",
+    "emoji-datasource",
+    "png",
+    "webp",
+    "cdn"
+  ],
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "images": "node scripts/images.mjs",
+    "fetch:originals": "node scripts/fetch-originals.mjs",
+    "import:originals": "node scripts/import-originals.mjs",
+    "test": "node --test test/runtime.test.mjs test/csv.test.mjs",
+    "typecheck": "tsc --noEmit --strict --lib ES2022,DOM --module NodeNext --moduleResolution NodeNext test/types.mts",
+    "verify": "node scripts/verify.mjs",
+    "check": "npm run build && npm test && npm run typecheck && npm run verify",
+    "prepack": "npm run build && npm run verify",
+    "prepublishOnly": "npm run check",
+    "configure": "node scripts/configure.mjs",
+    "version": "npm run build && git add dist emoji.json emoji-datasource.json manifest.json",
+    "preview": "node scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "sharp": "0.35.4",
+    "typescript": "5.9.3"
+  }
+}

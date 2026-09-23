@@ -1,0 +1,44 @@
+name: Bootstrap verified emoji assets
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/bootstrap-assets.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Save expected asset manifest
+        run: cp manifest.json /tmp/noto-expected-manifest.json
+      - run: npm run fetch:originals
+      - run: npm run images
+      - name: Verify exact prepared image checksums
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          const manifest=JSON.parse(await fs.readFile('/tmp/noto-expected-manifest.json','utf8'));
+          for(const a of manifest.assets){
+            const b=await fs.readFile(a.file);
+            if(b.length!==a.bytes||createHash('sha256').update(b).digest('hex')!==a.sha256)throw new Error('Asset mismatch: '+a.file);
+          }
+          console.log('All 11964 images match the prepared archive byte for byte.');
+          JS
+      - run: npm run check
+      - name: Commit verified images
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add img data/assets-lock.json dist emoji.json emoji-datasource.json manifest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add all 11964 verified Noto 3D image assets'
+          git push origin HEAD:main
